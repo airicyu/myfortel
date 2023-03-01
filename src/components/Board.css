@@ -1,0 +1,78 @@
+.board {
+    width: 800px;
+    height: 760px;
+    font-size: 12px;
+    font-family: Arial,文泉驛正黑,wenquanyi zen hei,儷黑 pro,lihei pro,微軟正黑體,microsoft jhenghei,標楷體,DFKai-SB,sans-serif;
+}
+
+.board .cell {
+    border: 1px solid #000000;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    padding: 2px;
+    width: 200px;
+    height: 190px;
+    font-size: 12px;
+    line-height: 1.1;
+    float: left;
+}
+
+.board .top-row,
+.board .bottom_row {
+    width: 100%;
+    height: 25%;
+}
+
+.board .middle-row {
+    width: 100%;
+    height: 50%;
+}
+
+.board .middle-row .left-col {
+    float: left;
+    width: 25%;
+    height: 100%;
+}
+
+.board .middle-row .middle-area {
+    float: left;
+    width: 50%;
+    height: 100%;
+    border: 1px solid #000000;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    font-size: 14px;
+}
+
+.board .middle-row .right-col {
+    float: left;
+    width: 25%;
+    height: 50%;
+}
+
+.vertical {
+    float: left;
+    width: 1em;
+    line-height: 1.1em;
+}
+
+.left {
+    float: left
+}
+
+.right {
+    float: right
+}
+
+.space-char-block {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+}
+
+.config-text {
+    padding-left: 15px;
+    padding-top: 15px;
+}

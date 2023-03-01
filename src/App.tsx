@@ -1,23 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { BuildBoardView } from "./view/buildBoard/BuildBoardView";
+import { DayBoardsView } from "./view/dayBoards/DayBoardsView";
+
+const router = createBrowserRouter([
+  {
+    path: "/myfortel",
+    element: <BuildBoardView />,
+    children: [],
+  },
+  {
+    path: "/myfortel/buildBoard",
+    element: <BuildBoardView />,
+    children: [],
+  },
+  {
+    path: "/myfortel/dayBoards",
+    element: <DayBoardsView />,
+    children: [],
+  },
+]);
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <RouterProvider router={router} />
       </header>
     </div>
   );

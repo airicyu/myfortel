@@ -1,0 +1,74 @@
+.cell .cell-top-left {
+    float: left;
+    width: 1em;
+    height: 70%;
+    text-align: left;
+}
+
+.cell .cell-top-middle {
+    float: left;
+    padding-left: 5em;
+    height: 73%;
+    width: 2em;
+    padding-right: 2%;
+    font-weight: 800;
+    font-size: 14px;
+    text-align: center;
+}
+
+.cell .cell-top-right {
+    float: right;
+    width: 6em;
+    height: 3.3em;
+    text-align: center;
+}
+
+.cell .cell-middle {
+    float: left;
+    width: 100%;
+    height: 14%;
+    text-align: center;
+}
+
+.cell .cell-bottom {
+    float: left;
+    width: 100%;
+    height: 13%;
+}
+
+.cell .cell-bottom .cell-bottom-left {
+    float: left;
+    width: 5em;
+    height: 25%;
+    text-align: center;
+}
+
+.cell .cell-bottom .cell-bottom-middle {
+    float: left;
+    width: 25%;
+    height: 25%;
+    text-align: center;
+}
+
+.cell .cell-bottom .cell-bottom-right {
+    float: right;
+    width: 7em;
+    height: 25%;
+    text-align: center;
+}
+
+.ten-year-runtime {
+    color: #a00
+}
+
+.year-runtime {
+    color: #00a
+}
+
+.month-runtime {
+    color: #073
+}
+
+.day-runtime {
+    color: #8000ff
+}
