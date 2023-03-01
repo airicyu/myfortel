@@ -25,8 +25,8 @@ export const BuildBoardView = () => {
     return searchParamsToDataStateMapper(searchParams);
   }, [searchParams]);
 
-  console.log("location.search ", location.search);
-  console.log("dataState ", dataState);
+  // console.log("location.search ", location.search);
+  // console.log("dataState ", dataState);
 
   const [configDataState, setConfigDataState] =
     useState<ConfigDataStateType | null>(dataState?.config ?? null);

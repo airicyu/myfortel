@@ -151,7 +151,7 @@ export const RuntimeConfigInputPanel = (
   );
 
   useEffect(() => {
-    console.log("runtimeconfiginputpanel updateRuntimeConfig");
+    // console.log("runtimeconfiginputpanel updateRuntimeConfig");
     updateRuntimeConfig();
   }, [
     calendarType,
