@@ -1,22 +1,22 @@
 import "./App.css";
 
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createHashRouter, RouterProvider } from "react-router-dom";
 import { BuildBoardView } from "./view/buildBoard/BuildBoardView";
 import { DayBoardsView } from "./view/dayBoards/DayBoardsView";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
-    path: "/myfortel",
+    path: "/",
     element: <BuildBoardView />,
     children: [],
   },
   {
-    path: "/myfortel/buildBoard",
+    path: "/buildBoard",
     element: <BuildBoardView />,
     children: [],
   },
   {
-    path: "/myfortel/dayBoards",
+    path: "/dayBoards",
     element: <DayBoardsView />,
     children: [],
   },

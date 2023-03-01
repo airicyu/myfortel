@@ -89,7 +89,7 @@ export const BuildBoardView = () => {
 
       if (location.search !== "?" + newQuery) {
         console.log("updateConfig->navigate", location.search, newQuery);
-        navigate(`/myfortel/buildBoard?${newQuery}`);
+        navigate(`/buildBoard?${newQuery}`);
       }
     }
   }, [configDataState, location.search, navigate, runtimeConfigDataState]);

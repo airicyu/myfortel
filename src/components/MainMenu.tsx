@@ -42,18 +42,14 @@ export const MainMenu = ({ defaultValue }: { defaultValue: string }) => {
     () => [
       {
         label: (
-          <Link to={`/myfortel/buildBoard?${urlSearchParams.toString()}`}>
-            起盤
-          </Link>
+          <Link to={`/buildBoard?${urlSearchParams.toString()}`}>起盤</Link>
         ),
         key: "buildBoard",
         icon: <SettingOutlined />,
       },
       {
         label: (
-          <Link to={`/myfortel/dayBoards?${urlSearchParams.toString()}`}>
-            全日命盤
-          </Link>
+          <Link to={`/dayBoards?${urlSearchParams.toString()}`}>全日命盤</Link>
         ),
         key: "dayBoards",
         icon: <AppstoreOutlined />,

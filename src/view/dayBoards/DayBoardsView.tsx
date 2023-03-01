@@ -98,7 +98,7 @@ export const DayBoardsView = () => {
 
       if (location.search !== "?" + newQuery) {
         console.log("updateConfig->navigate", location.search, newQuery);
-        navigate(`/myfortel/dayBoards?${newQuery}`);
+        navigate(`/dayBoards?${newQuery}`);
       }
     }
   }, [configDataState, location.search, navigate]);
@@ -159,7 +159,7 @@ export const DayBoardsView = () => {
         desintyBoard.config.configType.charAt(0),
       link: (
         <Link
-          to={`/myfortel/buildBoard?${destinyConfigToSearchParamsMapper(
+          to={`/buildBoard?${destinyConfigToSearchParamsMapper(
             desintyBoard.config
           ).toString()}`}
         >
