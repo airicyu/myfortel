@@ -50,7 +50,7 @@ export const searchParamsToDataStateMapper = (
   const month = strToNumOrNull(searchParams.get("m"));
   const day = strToNumOrNull(searchParams.get("d"));
   const leap = searchParams.get("lp") === "1";
-  const bornTime = strToNumOrNull(searchParams.get("bt"));
+  const bornTime = strToNumOrNull(searchParams.get("bt")) ?? 0;
   const configType = strToNumOrNull(searchParams.get("cf")) ?? 1;
 
   const gender = searchParams.get("g") === Gender.F ? Gender.F : Gender.M;
@@ -69,16 +69,17 @@ export const searchParamsToDataStateMapper = (
   const runtimeDay = strToNumOrNull(searchParams.get("rd"));
   const runtimeLeap = searchParams.get("rlp") === "1";
   const runtimeLunarYear =
-    calendarType === CalendarType.LUNAR ? runtimeYear : null;
+    runtimeCalendarType === CalendarType.LUNAR ? runtimeYear : null;
   const runtimeLunarMonth =
-    calendarType === CalendarType.LUNAR ? runtimeMonth : null;
+    runtimeCalendarType === CalendarType.LUNAR ? runtimeMonth : null;
   const runtimeLunarDay =
-    calendarType === CalendarType.LUNAR ? runtimeDay : null;
+    runtimeCalendarType === CalendarType.LUNAR ? runtimeDay : null;
   let runtimeSolarYear =
-    calendarType === CalendarType.SOLAR ? runtimeYear : null;
+    runtimeCalendarType === CalendarType.SOLAR ? runtimeYear : null;
   let runtimeSolarMonth =
-    calendarType === CalendarType.SOLAR ? runtimeMonth : null;
-  let runtimeSolarDay = calendarType === CalendarType.SOLAR ? runtimeDay : null;
+    runtimeCalendarType === CalendarType.SOLAR ? runtimeMonth : null;
+  let runtimeSolarDay =
+    runtimeCalendarType === CalendarType.SOLAR ? runtimeDay : null;
 
   if (!runtimeYear || !runtimeMonth || !runtimeDay) {
     const now = new Date();

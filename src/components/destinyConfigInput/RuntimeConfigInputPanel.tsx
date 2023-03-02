@@ -68,6 +68,20 @@ export const RuntimeConfigInputPanel = (
 
   const [scope, setScope] = useState<number>(props.scope ?? 0);
 
+  const [isRefresh, setIsRefresh] = useState(false);
+
+  useEffect(() => {
+    console.log("props updated", props);
+    setLunarYear(props.lunarYear ?? null);
+    setLunarMonth(props.lunarMonth ?? null);
+    setLunarDay(props.lunarDay ?? null);
+    setLunarLeap(props.leap ?? false);
+    setSolarYear(props.solarYear ?? null);
+    setSolarMonth(props.solarMonth ?? null);
+    setSolarDay(props.solarDay ?? null);
+    setScope(props.scope ?? 0);
+  }, [props]);
+
   const updateRuntimeConfig = useCallback(() => {
     props.updateRuntimeConfig({
       calendarType,
@@ -151,30 +165,24 @@ export const RuntimeConfigInputPanel = (
   );
 
   useEffect(() => {
-    // console.log("runtimeconfiginputpanel updateRuntimeConfig");
-    updateRuntimeConfig();
-  }, [
-    calendarType,
-    lunarDay,
-    lunarLeap,
-    lunarMonth,
-    lunarYear,
-    solarDay,
-    solarMonth,
-    solarYear,
-    scope,
-    updateRuntimeConfig,
-  ]);
+    if (isRefresh) {
+      setIsRefresh(false);
+      updateRuntimeConfig();
+    }
+  }, [isRefresh, updateRuntimeConfig]);
 
   return (
     <Card style={{ width: 600 }} title="流曜顯示">
       <Slider
         style={{ width: 200 }}
         marks={marks}
-        defaultValue={scope}
+        value={scope}
         min={0}
         max={4}
-        onChange={setScope}
+        onChange={(value) => {
+          setScope(value);
+          setIsRefresh(true);
+        }}
         tooltip={{ formatter: null }}
       />
       <Segmented
@@ -183,7 +191,10 @@ export const RuntimeConfigInputPanel = (
           { label: "西曆", value: CalendarType.SOLAR },
         ]}
         defaultValue={calendarType}
-        onChange={onChangeCalendarType}
+        onChange={(value) => {
+          onChangeCalendarType(value);
+          setIsRefresh(true);
+        }}
       />
       <div
         className="inline-block"
@@ -195,10 +206,22 @@ export const RuntimeConfigInputPanel = (
             month={lunarMonth}
             day={lunarDay}
             leap={lunarLeap}
-            onChangeYear={setLunarYear}
-            onChangeMonth={setLunarMonth}
-            onChangeDay={setLunarDay}
-            onChangeLeap={setLunarLeap}
+            onChangeYear={(value) => {
+              setLunarYear(value);
+              setIsRefresh(true);
+            }}
+            onChangeMonth={(value) => {
+              setLunarMonth(value);
+              setIsRefresh(true);
+            }}
+            onChangeDay={(value) => {
+              setLunarDay(value);
+              setIsRefresh(true);
+            }}
+            onChangeLeap={(value) => {
+              setLunarLeap(value);
+              setIsRefresh(true);
+            }}
           />
         </div>
 
@@ -207,9 +230,18 @@ export const RuntimeConfigInputPanel = (
             year={solarYear}
             month={solarMonth}
             day={solarDay}
-            onChangeYear={setSolarYear}
-            onChangeMonth={setSolarMonth}
-            onChangeDay={setSolarDay}
+            onChangeYear={(value) => {
+              setSolarYear(value);
+              setIsRefresh(true);
+            }}
+            onChangeMonth={(value) => {
+              setSolarMonth(value);
+              setIsRefresh(true);
+            }}
+            onChangeDay={(value) => {
+              setSolarDay(value);
+              setIsRefresh(true);
+            }}
           />
         </div>
       </div>

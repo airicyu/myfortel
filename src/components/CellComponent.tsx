@@ -233,33 +233,39 @@ function CellComponent(props: {
               );
             })}
           {showTenYear &&
-            runtimeContext?.tenYearGround?.equals(props.cellModel.ground) && (
+            runtimeContext?.tenYear?.cellGround?.equals(
+              props.cellModel.ground
+            ) && (
               <div
                 key={"temple_ten"}
                 className="vertical right ten-year-runtime"
               >
-                {Temple.TEMPLE_DESTINY.displayName}
+                {"限命"}
               </div>
             )}
           {showYear &&
-            runtimeContext?.yearGround?.equals(props.cellModel.ground) && (
+            runtimeContext?.year?.cellGround?.equals(
+              props.cellModel.ground
+            ) && (
               <div key={"temple_year"} className="vertical right year-runtime">
-                {Temple.TEMPLE_DESTINY.displayName}
+                {"年命"}
               </div>
             )}
           {showMonth &&
-            runtimeContext?.monthGround?.equals(props.cellModel.ground) && (
+            runtimeContext?.month?.cellGround?.equals(
+              props.cellModel.ground
+            ) && (
               <div
                 key={"temple_month"}
                 className="vertical right month-runtime"
               >
-                {Temple.TEMPLE_DESTINY.displayName}
+                {"月命"}
               </div>
             )}
           {showDay &&
-            runtimeContext?.dayGround?.equals(props.cellModel.ground) && (
+            runtimeContext?.day?.cellGround?.equals(props.cellModel.ground) && (
               <div key={"temple_day"} className="vertical right day-runtime">
-                {Temple.TEMPLE_DESTINY.displayName}
+                {"日命"}
               </div>
             )}
         </div>

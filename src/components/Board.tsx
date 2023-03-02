@@ -1,7 +1,12 @@
 import { CellComponent } from "./CellComponent";
 import "./Board.css";
 
-import { DestinyConfig, DestinyBoard } from "fortel-ziweidoushu";
+import {
+  DestinyConfig,
+  DestinyBoard,
+  CalendarType,
+  defaultCalendar,
+} from "fortel-ziweidoushu";
 import { useMemo } from "react";
 import { RuntimeConfigDataStateType } from "../view/buildBoard/stateMapper";
 
@@ -23,38 +28,58 @@ function Board({
   }, [destinyConfig]);
 
   const runtimeContext = useMemo(() => {
-    if (
-      !destinyConfig ||
-      !destinyBoard ||
-      !runtimeConfigDataState.lunarYear ||
-      !runtimeConfigDataState.lunarMonth ||
-      !runtimeConfigDataState.lunarDay ||
-      runtimeConfigDataState.leap === undefined
-    ) {
+    if (!destinyConfig || !destinyBoard) {
       return null;
     }
 
     try {
+      let lunarYear, lunarMonth, lunarDay, leap;
+
+      if (
+        runtimeConfigDataState.calendarType === CalendarType.SOLAR &&
+        runtimeConfigDataState.solarYear &&
+        runtimeConfigDataState.solarMonth &&
+        runtimeConfigDataState.solarDay
+      ) {
+        ({
+          lunarYear,
+          lunarMonth,
+          lunarDay,
+          isLeapMonth: leap,
+        } = defaultCalendar.solar2lunar(
+          runtimeConfigDataState.solarYear,
+          runtimeConfigDataState.solarMonth,
+          runtimeConfigDataState.solarDay
+        ));
+      } else {
+        ({ lunarYear, lunarMonth, lunarDay, leap } = runtimeConfigDataState);
+      }
+
+      if (!lunarYear || !lunarMonth || !lunarDay || leap === undefined) {
+        return null;
+      }
+
       const runtimeContext = destinyBoard.getRuntimContext({
-        lunarYear: runtimeConfigDataState.lunarYear,
-        lunarMonth: runtimeConfigDataState.lunarMonth,
-        lunarDay: runtimeConfigDataState.lunarDay,
-        leap: runtimeConfigDataState.leap,
+        lunarYear,
+        lunarMonth,
+        lunarDay,
+        leap,
       });
+
+      console.log(
+        "runtimeContext",
+        runtimeContext,
+        destinyBoard.startControl
+          .shift(runtimeContext.yearGround.index)
+          .shift(lunarMonth - 1)
+      );
 
       return runtimeContext;
     } catch (e) {
       console.error(e);
       return null;
     }
-  }, [
-    destinyBoard,
-    destinyConfig,
-    runtimeConfigDataState.leap,
-    runtimeConfigDataState.lunarDay,
-    runtimeConfigDataState.lunarMonth,
-    runtimeConfigDataState.lunarYear,
-  ]);
+  }, [destinyBoard, destinyConfig, runtimeConfigDataState]);
 
   const configTextElem = useMemo(
     () => (

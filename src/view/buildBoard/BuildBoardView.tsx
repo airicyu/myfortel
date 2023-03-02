@@ -21,41 +21,27 @@ export const BuildBoardView = () => {
   /**
    * parse search params => config data
    */
-  const dataState = useMemo(() => {
+  const initialDataState = useMemo(() => {
     return searchParamsToDataStateMapper(searchParams);
   }, [searchParams]);
 
-  // console.log("location.search ", location.search);
-  // console.log("dataState ", dataState);
-
-  const [configDataState, setConfigDataState] =
-    useState<ConfigDataStateType | null>(dataState?.config ?? null);
-
-  const [runtimeConfigDataState, setRuntimeConfigDataState] =
-    useState<RuntimeConfigDataStateType>(dataState?.runtimeConfig ?? {});
-
-  const [destinyConfig, setDestinyConfig] = useState<DestinyConfig | null>(
-    dataStateToDestinyConfigMapper(dataState.config)
+  const [configDataState, setConfigDataState] = useState<ConfigDataStateType>(
+    initialDataState.config
   );
 
-  const [destinyBoard, setDestinyBoard] = useState<DestinyBoard | null>(
-    (destinyConfig && new DestinyBoard(destinyConfig)) ?? null
+  const [runtimeConfigDataState, setRuntimeConfigDataState] =
+    useState<RuntimeConfigDataStateType>(initialDataState?.runtimeConfig ?? {});
+
+  const [destinyConfig, setDestinyConfig] = useState<DestinyConfig | null>(
+    (configDataState && dataStateToDestinyConfigMapper(configDataState)) ?? null
   );
 
   /**
    * init => try build destiny config from config data
    */
   useEffect(() => {
-    setDestinyConfig(dataStateToDestinyConfigMapper(dataState.config));
-  }, [dataState.config]);
-
-  useEffect(() => {
-    if (destinyConfig) {
-      setDestinyBoard(new DestinyBoard(destinyConfig));
-    } else {
-      setDestinyBoard(null);
-    }
-  }, [destinyConfig]);
+    setDestinyConfig(dataStateToDestinyConfigMapper(configDataState));
+  }, [configDataState]);
 
   const updateConfig = useCallback(
     (updatedState: ConfigDataStateType) => {
@@ -99,14 +85,14 @@ export const BuildBoardView = () => {
       <MainMenu defaultValue="buildBoard" />
       <DestinyConfigInputPanel
         updateConfig={updateConfig}
-        {...dataState.config}
+        {...configDataState}
       ></DestinyConfigInputPanel>
 
       <div style={{ marginTop: 15 }}></div>
 
       <RuntimeConfigInputPanel
         updateRuntimeConfig={updateRuntimeConfigDataState}
-        {...dataState.runtimeConfig}
+        {...runtimeConfigDataState}
       ></RuntimeConfigInputPanel>
 
       {destinyConfig ? (
