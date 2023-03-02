@@ -103,6 +103,8 @@ export const BuildBoardView = () => {
         {...runtimeConfigDataState}
       ></RuntimeConfigInputPanel>
 
+      <div style={{ marginTop: 15 }}></div>
+
       {destinyConfig && validDestinyBoard ? (
         <Board
           destinyConfig={destinyConfig}
