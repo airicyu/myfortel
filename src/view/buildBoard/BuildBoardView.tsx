@@ -36,6 +36,14 @@ export const BuildBoardView = () => {
     (configDataState && dataStateToDestinyConfigMapper(configDataState)) ?? null
   );
 
+  const validDestinyBoard = useMemo(() => {
+    try {
+      return destinyConfig && new DestinyBoard(destinyConfig) && true;
+    } catch (e) {
+      return false;
+    }
+  }, [destinyConfig]);
+
   /**
    * init => try build destiny config from config data
    */
@@ -95,7 +103,7 @@ export const BuildBoardView = () => {
         {...runtimeConfigDataState}
       ></RuntimeConfigInputPanel>
 
-      {destinyConfig ? (
+      {destinyConfig && validDestinyBoard ? (
         <Board
           destinyConfig={destinyConfig}
           runtimeConfigDataState={runtimeConfigDataState}
