@@ -188,6 +188,7 @@ export const RuntimeConfigInputPanel = (
       setLunarYear(lunarYear - 10);
     }
     setLunarLeap(false);
+    setScope(1);
     setIsRefresh(true);
   }, [lunarYear, onChangeCalendarType]);
 
@@ -198,6 +199,7 @@ export const RuntimeConfigInputPanel = (
       setLunarYear(lunarYear + 10);
     }
     setLunarLeap(false);
+    setScope(1);
     setIsRefresh(true);
   }, [lunarYear, onChangeCalendarType]);
 
@@ -208,6 +210,7 @@ export const RuntimeConfigInputPanel = (
       setLunarYear(lunarYear - 1);
     }
     setLunarLeap(false);
+    setScope(2);
     setIsRefresh(true);
   }, [lunarYear, onChangeCalendarType]);
 
@@ -218,6 +221,7 @@ export const RuntimeConfigInputPanel = (
       setLunarYear(lunarYear + 1);
     }
     setLunarLeap(false);
+    setScope(2);
     setIsRefresh(true);
   }, [lunarYear, onChangeCalendarType]);
 
@@ -233,6 +237,7 @@ export const RuntimeConfigInputPanel = (
       }
     }
     setLunarLeap(false);
+    setScope(3);
     setIsRefresh(true);
   }, [lunarMonth, lunarYear, onChangeCalendarType]);
 
@@ -248,6 +253,7 @@ export const RuntimeConfigInputPanel = (
       }
     }
     setLunarLeap(false);
+    setScope(3);
     setIsRefresh(true);
   }, [lunarMonth, lunarYear, onChangeCalendarType]);
 
@@ -274,6 +280,7 @@ export const RuntimeConfigInputPanel = (
       setLunarMonth(lunarDate.lunarMonth);
       setLunarDay(lunarDate.lunarDay);
       setLunarLeap(lunarDate.isLeapMonth);
+      setScope(4);
       setIsRefresh(true);
     }
   }, [lunarDay, lunarLeap, lunarMonth, lunarYear, onChangeCalendarType]);
@@ -301,6 +308,7 @@ export const RuntimeConfigInputPanel = (
       setLunarMonth(lunarDate.lunarMonth);
       setLunarDay(lunarDate.lunarDay);
       setLunarLeap(lunarDate.isLeapMonth);
+      setScope(4);
       setIsRefresh(true);
     }
   }, [lunarDay, lunarLeap, lunarMonth, lunarYear, onChangeCalendarType]);
