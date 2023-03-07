@@ -48,7 +48,7 @@ export const RuntimeConfigInputPanel = (
   }
 ) => {
   const [calendarType, setCalendarType] = useState<CalendarType>(
-    props.calendarType ?? CalendarType.LUNAR
+    props.calendarType ?? CalendarType.SOLAR
   );
 
   const [lunarYear, setLunarYear] = useState<number | null>(
@@ -74,13 +74,17 @@ export const RuntimeConfigInputPanel = (
 
   useEffect(() => {
     console.log("props updated", props);
-    setLunarYear(props.lunarYear ?? null);
-    setLunarMonth(props.lunarMonth ?? null);
-    setLunarDay(props.lunarDay ?? null);
-    setLunarLeap(props.leap ?? false);
-    setSolarYear(props.solarYear ?? null);
-    setSolarMonth(props.solarMonth ?? null);
-    setSolarDay(props.solarDay ?? null);
+    const now = DateTime.now();
+    const lunarDate = defaultCalendar.solar2lunar(now.year, now.month, now.day);
+
+    setCalendarType(props.calendarType ?? CalendarType.SOLAR);
+    setLunarYear(props.lunarYear ?? lunarDate.lunarYear);
+    setLunarMonth(props.lunarMonth ?? lunarDate.lunarMonth);
+    setLunarDay(props.lunarDay ?? lunarDate.lunarDay);
+    setLunarLeap(props.leap ?? lunarDate.isLeapMonth);
+    setSolarYear(props.solarYear ?? now.year);
+    setSolarMonth(props.solarMonth ?? now.month);
+    setSolarDay(props.solarDay ?? now.day);
     setScope(props.scope ?? 0);
   }, [props]);
 
