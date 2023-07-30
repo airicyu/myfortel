@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/myfortel/static/css/main.267ad45b.css",
-    "main.js": "/myfortel/static/js/main.8eda81a9.js",
+    "main.js": "/myfortel/static/js/main.213f568a.js",
     "index.html": "/myfortel/index.html",
     "main.267ad45b.css.map": "/myfortel/static/css/main.267ad45b.css.map",
-    "main.8eda81a9.js.map": "/myfortel/static/js/main.8eda81a9.js.map"
+    "main.213f568a.js.map": "/myfortel/static/js/main.213f568a.js.map"
   },
   "entrypoints": [
     "static/css/main.267ad45b.css",
-    "static/js/main.8eda81a9.js"
+    "static/js/main.213f568a.js"
   ]
 }
