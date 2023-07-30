@@ -222,7 +222,6 @@ export const RuntimeConfigInputPanel = (
     (value: string | number) => {
       if (calendarType === CalendarType.LUNAR && value === CalendarType.SOLAR) {
         syncSolarLunarCalendar();
-
         setDataState({
           ...dataState,
           calendarType: CalendarType.SOLAR,
@@ -261,6 +260,7 @@ export const RuntimeConfigInputPanel = (
       lunarMonth: lunarDate.lunarMonth,
       lunarDay: lunarDate.lunarDay,
       lunarLeap: lunarDate.isLeapMonth,
+      scope: 4,
     });
     setIsRefresh(true);
   }, [dataState]);
