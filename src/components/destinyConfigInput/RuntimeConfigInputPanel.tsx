@@ -42,33 +42,68 @@ const marks: SliderMarks = {
   },
 };
 
+declare type DataState = {
+  calendarType: CalendarType;
+  lunarYear: number;
+  lunarMonth: number;
+  lunarDay: number;
+  lunarLeap: boolean;
+  solarYear: number;
+  solarMonth: number;
+  solarDay: number;
+  scope: number;
+};
+
 export const RuntimeConfigInputPanel = (
   props: RuntimeConfigDataStateType & {
     updateRuntimeConfig: (dataState: RuntimeConfigDataStateType) => void;
   }
 ) => {
-  const [calendarType, setCalendarType] = useState<CalendarType>(
-    props.calendarType ?? CalendarType.SOLAR
-  );
+  const [dataState, setDataState] = useState<DataState>({
+    calendarType: props.calendarType ?? CalendarType.SOLAR,
+    lunarYear: props.lunarYear ?? 1990,
+    lunarMonth: props.lunarMonth ?? 1,
+    lunarDay: props.lunarDay ?? 1,
+    lunarLeap: props.leap ?? false,
+    solarYear: props.solarYear ?? 1990,
+    solarMonth: props.solarMonth ?? 1,
+    solarDay: props.solarDay ?? 1,
+    scope: props.scope ?? 0,
+  });
 
-  const [lunarYear, setLunarYear] = useState<number | null>(
-    props.lunarYear ?? 1990
-  );
-  const [lunarMonth, setLunarMonth] = useState<number | null>(
-    props.lunarMonth ?? 1
-  );
-  const [lunarDay, setLunarDay] = useState<number | null>(props.lunarDay ?? 1);
-  const [lunarLeap, setLunarLeap] = useState<boolean>(props.leap ?? false);
+  const {
+    calendarType,
+    lunarYear,
+    lunarMonth,
+    lunarDay,
+    lunarLeap,
+    solarYear,
+    solarMonth,
+    solarDay,
+    scope,
+  } = dataState;
+  // const [calendarType, setCalendarType] = useState<CalendarType>(
+  //   props.calendarType ?? CalendarType.SOLAR
+  // );
 
-  const [solarYear, setSolarYear] = useState<number | null>(
-    props.solarYear ?? 1990
-  );
-  const [solarMonth, setSolarMonth] = useState<number | null>(
-    props.solarMonth ?? 1
-  );
-  const [solarDay, setSolarDay] = useState<number | null>(props.solarDay ?? 1);
+  // const [lunarYear, setLunarYear] = useState<number | null>(
+  //   props.lunarYear ?? 1990
+  // );
+  // const [lunarMonth, setLunarMonth] = useState<number | null>(
+  //   props.lunarMonth ?? 1
+  // );
+  // const [lunarDay, setLunarDay] = useState<number | null>(props.lunarDay ?? 1);
+  // const [lunarLeap, setLunarLeap] = useState<boolean>(props.leap ?? false);
 
-  const [scope, setScope] = useState<number>(props.scope ?? 0);
+  // const [solarYear, setSolarYear] = useState<number | null>(
+  //   props.solarYear ?? 1990
+  // );
+  // const [solarMonth, setSolarMonth] = useState<number | null>(
+  //   props.solarMonth ?? 1
+  // );
+  // const [solarDay, setSolarDay] = useState<number | null>(props.solarDay ?? 1);
+
+  // const [scope, setScope] = useState<number>(props.scope ?? 0);
 
   const [isRefresh, setIsRefresh] = useState(false);
 
@@ -77,15 +112,17 @@ export const RuntimeConfigInputPanel = (
     const now = DateTime.now();
     const lunarDate = defaultCalendar.solar2lunar(now.year, now.month, now.day);
 
-    setCalendarType(props.calendarType ?? CalendarType.SOLAR);
-    setLunarYear(props.lunarYear ?? lunarDate.lunarYear);
-    setLunarMonth(props.lunarMonth ?? lunarDate.lunarMonth);
-    setLunarDay(props.lunarDay ?? lunarDate.lunarDay);
-    setLunarLeap(props.leap ?? lunarDate.isLeapMonth);
-    setSolarYear(props.solarYear ?? now.year);
-    setSolarMonth(props.solarMonth ?? now.month);
-    setSolarDay(props.solarDay ?? now.day);
-    setScope(props.scope ?? 0);
+    setDataState({
+      calendarType: props.calendarType ?? CalendarType.SOLAR,
+      lunarYear: props.lunarYear ?? lunarDate.lunarYear,
+      lunarMonth: props.lunarMonth ?? lunarDate.lunarMonth,
+      lunarDay: props.lunarDay ?? lunarDate.lunarDay,
+      lunarLeap: props.leap ?? lunarDate.isLeapMonth,
+      solarYear: props.solarYear ?? now.year,
+      solarMonth: props.solarMonth ?? now.month,
+      solarDay: props.solarDay ?? now.day,
+      scope: props.scope ?? 0,
+    });
   }, [props]);
 
   const updateRuntimeConfig = useCallback(() => {
@@ -113,52 +150,53 @@ export const RuntimeConfigInputPanel = (
     solarYear,
   ]);
 
-  const onChangeCalendarType = useCallback(
-    (value: string | number) => {
-      if (calendarType === CalendarType.LUNAR && value === CalendarType.SOLAR) {
-        if (lunarYear && lunarMonth && lunarDay) {
-          try {
-            const solarDate = defaultCalendar.lunar2solar(
-              lunarYear,
-              lunarMonth,
-              lunarDay,
-              lunarLeap
-            );
-            if (solarDate) {
-              setSolarYear(solarDate.solarYear);
-              setSolarMonth(solarDate.solarMonth);
-              setSolarDay(solarDate.solarDay);
-            }
-            setCalendarType(CalendarType.SOLAR);
-          } catch (e) {
-            console.debug("convert date error", e);
-          }
-        }
-      } else if (
-        calendarType === CalendarType.SOLAR &&
-        value === CalendarType.LUNAR
-      ) {
+  const syncSolarLunarCalendar = useCallback(() => {
+    if (calendarType === CalendarType.LUNAR) {
+      if (lunarYear && lunarMonth && lunarDay) {
         try {
-          if (solarYear && solarMonth && solarDay) {
-            const lunarDate = defaultCalendar.solar2lunar(
-              solarYear,
-              solarMonth,
-              solarDay
-            );
-            if (lunarDate) {
-              setLunarYear(lunarDate.lunarYear);
-              setLunarMonth(lunarDate.lunarMonth);
-              setLunarDay(lunarDate.lunarDay);
-              setLunarLeap(lunarDate.isLeapMonth);
-            }
-            setCalendarType(CalendarType.LUNAR);
+          const solarDate = defaultCalendar.lunar2solar(
+            lunarYear,
+            lunarMonth,
+            lunarDay,
+            lunarLeap
+          );
+          if (solarDate) {
+            setDataState({
+              ...dataState,
+              solarYear: solarDate.solarYear,
+              solarMonth: solarDate.solarYear,
+              solarDay: solarDate.solarYear,
+            });
           }
         } catch (e) {
           console.debug("convert date error", e);
         }
       }
-    },
-    [
+    } else if (calendarType === CalendarType.SOLAR) {
+      try {
+        if (solarYear && solarMonth && solarDay) {
+          const lunarDate = defaultCalendar.solar2lunar(
+            solarYear,
+            solarMonth,
+            solarDay
+          );
+          if (lunarDate) {
+            setDataState({
+              ...dataState,
+              calendarType: CalendarType.SOLAR,
+              lunarYear: lunarDate.lunarYear,
+              lunarMonth: lunarDate.lunarMonth,
+              lunarDay: lunarDate.lunarDay,
+              lunarLeap: lunarDate.isLeapMonth,
+            });
+          }
+        }
+      } catch (e) {
+        console.debug("convert date error", e);
+      }
+    }
+    console.log(
+      "syncSolarLunarCalendar",
       calendarType,
       lunarYear,
       lunarMonth,
@@ -166,8 +204,41 @@ export const RuntimeConfigInputPanel = (
       lunarLeap,
       solarYear,
       solarMonth,
-      solarDay,
-    ]
+      solarDay
+    );
+  }, [
+    calendarType,
+    dataState,
+    lunarDay,
+    lunarLeap,
+    lunarMonth,
+    lunarYear,
+    solarDay,
+    solarMonth,
+    solarYear,
+  ]);
+
+  const onChangeCalendarType = useCallback(
+    (value: string | number) => {
+      if (calendarType === CalendarType.LUNAR && value === CalendarType.SOLAR) {
+        syncSolarLunarCalendar();
+
+        setDataState({
+          ...dataState,
+          calendarType: CalendarType.SOLAR,
+        });
+      } else if (
+        calendarType === CalendarType.SOLAR &&
+        value === CalendarType.LUNAR
+      ) {
+        syncSolarLunarCalendar();
+        setDataState({
+          ...dataState,
+          calendarType: CalendarType.LUNAR,
+        });
+      }
+    },
+    [calendarType, dataState, syncSolarLunarCalendar]
   );
 
   useEffect(() => {
@@ -178,144 +249,167 @@ export const RuntimeConfigInputPanel = (
   }, [isRefresh, updateRuntimeConfig]);
 
   const goToday = useCallback(() => {
-    setCalendarType(CalendarType.SOLAR);
-    setSolarYear(DateTime.now().year);
-    setSolarMonth(DateTime.now().month);
-    setSolarDay(DateTime.now().day);
+    const { year, month, day } = DateTime.now();
+    const lunarDate = defaultCalendar.solar2lunar(year, month, day);
+    setDataState({
+      ...dataState,
+      calendarType: CalendarType.SOLAR,
+      solarYear: year,
+      solarMonth: month,
+      solarDay: day,
+      lunarYear: lunarDate.lunarYear,
+      lunarMonth: lunarDate.lunarMonth,
+      lunarDay: lunarDate.lunarDay,
+      lunarLeap: lunarDate.isLeapMonth,
+    });
     setIsRefresh(true);
-  }, []);
+  }, [dataState]);
 
   const goPrevTenYear = useCallback(() => {
-    setCalendarType(CalendarType.LUNAR);
-    onChangeCalendarType(CalendarType.LUNAR);
-    if (lunarYear) {
-      setLunarYear(lunarYear - 10);
-    }
-    setLunarLeap(false);
-    setScope(1);
+    syncSolarLunarCalendar();
+    setDataState({
+      ...dataState,
+      calendarType: CalendarType.LUNAR,
+      lunarYear: lunarYear - 10,
+      lunarLeap: false,
+      scope: 1,
+    });
     setIsRefresh(true);
-  }, [lunarYear, onChangeCalendarType]);
+  }, [dataState, lunarYear, syncSolarLunarCalendar]);
 
   const goNextTenYear = useCallback(() => {
-    setCalendarType(CalendarType.LUNAR);
-    onChangeCalendarType(CalendarType.LUNAR);
-    if (lunarYear) {
-      setLunarYear(lunarYear + 10);
-    }
-    setLunarLeap(false);
-    setScope(1);
+    syncSolarLunarCalendar();
+    setDataState({
+      ...dataState,
+      calendarType: CalendarType.LUNAR,
+      lunarYear: lunarYear + 10,
+      lunarLeap: false,
+      scope: 1,
+    });
     setIsRefresh(true);
-  }, [lunarYear, onChangeCalendarType]);
+  }, [dataState, lunarYear, syncSolarLunarCalendar]);
 
   const goPrevYear = useCallback(() => {
-    setCalendarType(CalendarType.LUNAR);
-    onChangeCalendarType(CalendarType.LUNAR);
-    if (lunarYear) {
-      setLunarYear(lunarYear - 1);
-    }
-    setLunarLeap(false);
-    setScope(2);
+    syncSolarLunarCalendar();
+    setDataState({
+      ...dataState,
+      calendarType: CalendarType.LUNAR,
+      lunarYear: lunarYear - 1,
+      lunarLeap: false,
+      scope: 2,
+    });
     setIsRefresh(true);
-  }, [lunarYear, onChangeCalendarType]);
+  }, [dataState, lunarYear, syncSolarLunarCalendar]);
 
   const goNextYear = useCallback(() => {
-    setCalendarType(CalendarType.LUNAR);
-    onChangeCalendarType(CalendarType.LUNAR);
-    if (lunarYear) {
-      setLunarYear(lunarYear + 1);
-    }
-    setLunarLeap(false);
-    setScope(2);
+    syncSolarLunarCalendar();
+    setDataState({
+      ...dataState,
+      calendarType: CalendarType.LUNAR,
+      lunarYear: lunarYear + 1,
+      lunarLeap: false,
+      scope: 2,
+    });
     setIsRefresh(true);
-  }, [lunarYear, onChangeCalendarType]);
+  }, [dataState, lunarYear, syncSolarLunarCalendar]);
 
   const goPrevMonth = useCallback(() => {
-    setCalendarType(CalendarType.LUNAR);
-    onChangeCalendarType(CalendarType.LUNAR);
-    if (lunarYear && lunarMonth) {
-      if (lunarMonth > 1) {
-        setLunarMonth(lunarMonth - 1);
-      } else {
-        setLunarYear(lunarYear - 1);
-        setLunarMonth(12);
-      }
-    }
-    setLunarLeap(false);
-    setScope(3);
+    syncSolarLunarCalendar();
+    setDataState({
+      ...dataState,
+      calendarType: CalendarType.LUNAR,
+      lunarYear: lunarMonth > 1 ? lunarYear : lunarYear - 1,
+      lunarMonth: lunarMonth > 1 ? lunarMonth - 1 : 12,
+      lunarLeap: false,
+      scope: 3,
+    });
     setIsRefresh(true);
-  }, [lunarMonth, lunarYear, onChangeCalendarType]);
+  }, [dataState, lunarMonth, lunarYear, syncSolarLunarCalendar]);
 
   const goNextMonth = useCallback(() => {
-    setCalendarType(CalendarType.LUNAR);
-    onChangeCalendarType(CalendarType.LUNAR);
-    if (lunarYear && lunarMonth) {
-      if (lunarMonth < 12) {
-        setLunarMonth(lunarMonth + 1);
-      } else {
-        setLunarYear(lunarYear + 1);
-        setLunarMonth(1);
-      }
-    }
-    setLunarLeap(false);
-    setScope(3);
+    syncSolarLunarCalendar();
+    setDataState({
+      ...dataState,
+      calendarType: CalendarType.LUNAR,
+      lunarYear: lunarMonth < 12 ? lunarYear : lunarYear + 1,
+      lunarMonth: lunarMonth < 12 ? lunarMonth + 1 : 1,
+      lunarLeap: false,
+      scope: 3,
+    });
     setIsRefresh(true);
-  }, [lunarMonth, lunarYear, onChangeCalendarType]);
+  }, [dataState, lunarMonth, lunarYear, syncSolarLunarCalendar]);
 
   const goPrevDay = useCallback(() => {
-    setCalendarType(CalendarType.LUNAR);
-    onChangeCalendarType(CalendarType.LUNAR);
-    if (lunarYear && lunarMonth && lunarDay) {
-      const solarDate = defaultCalendar.lunar2solar(
-        lunarYear,
-        lunarMonth,
-        lunarDay,
-        lunarLeap
-      );
-      const { year, month, day } = DateTime.fromObject({
-        year: solarDate.solarYear,
-        month: solarDate.solarMonth,
-        day: solarDate.solarDay,
-        hour: 0,
-        minute: 0,
-        second: 0,
-      }).minus({ day: 1 });
-      const lunarDate = defaultCalendar.solar2lunar(year, month, day);
-      setLunarYear(lunarDate.lunarYear);
-      setLunarMonth(lunarDate.lunarMonth);
-      setLunarDay(lunarDate.lunarDay);
-      setLunarLeap(lunarDate.isLeapMonth);
-      setScope(4);
-      setIsRefresh(true);
-    }
-  }, [lunarDay, lunarLeap, lunarMonth, lunarYear, onChangeCalendarType]);
+    syncSolarLunarCalendar();
+    const solarDate = defaultCalendar.lunar2solar(
+      lunarYear,
+      lunarMonth,
+      lunarDay,
+      lunarLeap
+    );
+    const { year, month, day } = DateTime.fromObject({
+      year: solarDate.solarYear,
+      month: solarDate.solarMonth,
+      day: solarDate.solarDay,
+      hour: 0,
+      minute: 0,
+      second: 0,
+    }).minus({ day: 1 });
+    const lunarDate = defaultCalendar.solar2lunar(year, month, day);
+    setDataState({
+      ...dataState,
+      calendarType: CalendarType.LUNAR,
+      lunarYear: lunarDate.lunarYear,
+      lunarMonth: lunarDate.lunarMonth,
+      lunarDay: lunarDate.lunarDay,
+      lunarLeap: lunarDate.isLeapMonth,
+      scope: 4,
+    });
+    setIsRefresh(true);
+  }, [
+    dataState,
+    lunarDay,
+    lunarLeap,
+    lunarMonth,
+    lunarYear,
+    syncSolarLunarCalendar,
+  ]);
 
   const goNextDay = useCallback(() => {
-    setCalendarType(CalendarType.LUNAR);
-    onChangeCalendarType(CalendarType.LUNAR);
-    if (lunarYear && lunarMonth && lunarDay) {
-      const solarDate = defaultCalendar.lunar2solar(
-        lunarYear,
-        lunarMonth,
-        lunarDay,
-        lunarLeap
-      );
-      const { year, month, day } = DateTime.fromObject({
-        year: solarDate.solarYear,
-        month: solarDate.solarMonth,
-        day: solarDate.solarDay,
-        hour: 0,
-        minute: 0,
-        second: 0,
-      }).plus({ day: 1 });
-      const lunarDate = defaultCalendar.solar2lunar(year, month, day);
-      setLunarYear(lunarDate.lunarYear);
-      setLunarMonth(lunarDate.lunarMonth);
-      setLunarDay(lunarDate.lunarDay);
-      setLunarLeap(lunarDate.isLeapMonth);
-      setScope(4);
-      setIsRefresh(true);
-    }
-  }, [lunarDay, lunarLeap, lunarMonth, lunarYear, onChangeCalendarType]);
+    syncSolarLunarCalendar();
+    const solarDate = defaultCalendar.lunar2solar(
+      lunarYear,
+      lunarMonth,
+      lunarDay,
+      lunarLeap
+    );
+    const { year, month, day } = DateTime.fromObject({
+      year: solarDate.solarYear,
+      month: solarDate.solarMonth,
+      day: solarDate.solarDay,
+      hour: 0,
+      minute: 0,
+      second: 0,
+    }).plus({ day: 1 });
+    const lunarDate = defaultCalendar.solar2lunar(year, month, day);
+    setDataState({
+      ...dataState,
+      calendarType: CalendarType.LUNAR,
+      lunarYear: lunarDate.lunarYear,
+      lunarMonth: lunarDate.lunarMonth,
+      lunarDay: lunarDate.lunarDay,
+      lunarLeap: lunarDate.isLeapMonth,
+      scope: 4,
+    });
+    setIsRefresh(true);
+  }, [
+    dataState,
+    lunarDay,
+    lunarLeap,
+    lunarMonth,
+    lunarYear,
+    syncSolarLunarCalendar,
+  ]);
 
   return (
     <Card style={{ width: 600 }} title="流曜顯示">
@@ -326,7 +420,7 @@ export const RuntimeConfigInputPanel = (
         min={0}
         max={4}
         onChange={(value) => {
-          setScope(value);
+          setDataState({ ...dataState, scope: value });
           setIsRefresh(true);
         }}
         tooltip={{ formatter: null }}
@@ -354,19 +448,19 @@ export const RuntimeConfigInputPanel = (
               day={lunarDay}
               leap={lunarLeap}
               onChangeYear={(value) => {
-                setLunarYear(value);
+                setDataState({ ...dataState, lunarYear: value });
                 setIsRefresh(true);
               }}
               onChangeMonth={(value) => {
-                setLunarMonth(value);
+                setDataState({ ...dataState, lunarMonth: value });
                 setIsRefresh(true);
               }}
               onChangeDay={(value) => {
-                setLunarDay(value);
+                setDataState({ ...dataState, lunarDay: value });
                 setIsRefresh(true);
               }}
               onChangeLeap={(value) => {
-                setLunarLeap(value);
+                setDataState({ ...dataState, lunarLeap: value });
                 setIsRefresh(true);
               }}
             />
@@ -378,15 +472,15 @@ export const RuntimeConfigInputPanel = (
               month={solarMonth}
               day={solarDay}
               onChangeYear={(value) => {
-                setSolarYear(value);
+                setDataState({ ...dataState, solarYear: value });
                 setIsRefresh(true);
               }}
               onChangeMonth={(value) => {
-                setSolarMonth(value);
+                setDataState({ ...dataState, solarMonth: value });
                 setIsRefresh(true);
               }}
               onChangeDay={(value) => {
-                setSolarDay(value);
+                setDataState({ ...dataState, solarDay: value });
                 setIsRefresh(true);
               }}
             />
