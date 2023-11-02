@@ -164,8 +164,8 @@ export const RuntimeConfigInputPanel = (
             setDataState({
               ...dataState,
               solarYear: solarDate.solarYear,
-              solarMonth: solarDate.solarYear,
-              solarDay: solarDate.solarYear,
+              solarMonth: solarDate.solarMonth,
+              solarDay: solarDate.solarDay,
             });
           }
         } catch (e) {
